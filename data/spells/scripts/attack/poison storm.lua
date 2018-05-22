@@ -19,7 +19,7 @@ condition:addDamage(4, 5000, -4)
 condition:addDamage(6, 5000, -3)
 condition:addDamage(9, 5000, -2)
 condition:addDamage(12, 5000, -1)
-combat:setCondition(condition)
+combat:addCondition(condition)
 
 function onGetFormulaValues(player, level, maglevel)
 	min = -((level * 2) + (maglevel * 3)) * 0.9

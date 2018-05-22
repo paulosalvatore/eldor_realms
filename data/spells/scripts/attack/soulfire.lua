@@ -7,7 +7,7 @@ local condition = Condition(CONDITION_FIRE)
 condition:setParameter(CONDITION_PARAM_DELAYED, true)
 condition:addDamage(3, 10000, -10)
 condition:addDamage(10, 10000, -5)
-combat:setCondition(condition)
+combat:addCondition(condition)
 
 function onCastSpell(creature, var)
 	-- check for stairHop delay

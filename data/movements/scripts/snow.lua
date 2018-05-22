@@ -3,13 +3,11 @@ function onStepOut(creature, item, position, fromPosition)
 		return true
 	end
 
-	local itemId = item:getId()
-	if itemId == 670 then
+	if item:getId() == 670 then
 		item:transform(6594)
 	else
-		item:transform(itemId + 15)
+		item:transform(item.itemid + 15)
 	end
-
 	item:decay()
 	return true
 end

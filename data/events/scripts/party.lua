@@ -7,6 +7,5 @@ function Party:onLeave(player)
 end
 
 function Party:onDisband()
-	self:alterarOuroMonstroCompartilhado(0, true)
 	return true
 end

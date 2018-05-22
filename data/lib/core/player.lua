@@ -1,6 +1,6 @@
 local foodCondition = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 
-function Player:feed(food)
+function Player.feed(self, food)
 	local condition = self:getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 	if condition then
 		condition:setTicks(condition:getTicks() + (food * 1000))
@@ -21,18 +21,22 @@ function Player:feed(food)
 	return true
 end
 
-function Player:getClosestFreePosition(position, extended)
-	if self:getGroup():getAccess() then
+function Player.getClosestFreePosition(self, position, extended)
+	if self:getGroup():getAccess() and self:getAccountType() >= ACCOUNT_TYPE_GOD then
 		return position
 	end
 	return Creature.getClosestFreePosition(self, position, extended)
 end
 
-function Player:getDepotItems(depotId)
+function Player.getDepotItems(self, depotId)
 	return self:getDepotChest(depotId, true):getItemHoldingCount()
 end
 
-function Player:getLossPercent()
+function Player.hasFlag(self, flag)
+	return self:getGroup():hasFlag(flag)
+end
+
+function Player.getLossPercent(self)
 	local blessings = 0
 	local lossPercent = {
 		[0] = 100,
@@ -51,22 +55,22 @@ function Player:getLossPercent()
 	return lossPercent[blessings]
 end
 
-function Player:isPremium()
+function Player.isPremium(self)
 	return self:getPremiumDays() > 0 or configManager.getBoolean(configKeys.FREE_PREMIUM)
 end
 
-function Player:sendCancelMessage(message)
+function Player.sendCancelMessage(self, message)
 	if type(message) == "number" then
 		message = Game.getReturnMessage(message)
 	end
 	return self:sendTextMessage(MESSAGE_STATUS_SMALL, message)
 end
 
-function Player:isUsingOtClient()
+function Player.isUsingOtClient(self)
 	return self:getClient().os >= CLIENTOS_OTCLIENT_LINUX
 end
 
-function Player:sendExtendedOpcode(opcode, buffer)
+function Player.sendExtendedOpcode(self, opcode, buffer)
 	if not self:isUsingOtClient() then
 		return false
 	end
@@ -75,14 +79,14 @@ function Player:sendExtendedOpcode(opcode, buffer)
 	networkMessage:addByte(0x32)
 	networkMessage:addByte(opcode)
 	networkMessage:addString(buffer)
-	networkMessage:sendToPlayer(self, true)
+	networkMessage:sendToPlayer(self)
 	networkMessage:delete()
 	return true
 end
 
 APPLY_SKILL_MULTIPLIER = true
 local addSkillTriesFunc = Player.addSkillTries
-function Player:addSkillTries(...)
+function Player.addSkillTries(...)
 	APPLY_SKILL_MULTIPLIER = false
 	local ret = addSkillTriesFunc(...)
 	APPLY_SKILL_MULTIPLIER = true
@@ -90,7 +94,7 @@ function Player:addSkillTries(...)
 end
 
 local addManaSpentFunc = Player.addManaSpent
-function Player:addManaSpent(...)
+function Player.addManaSpent(...)
 	APPLY_SKILL_MULTIPLIER = false
 	local ret = addManaSpentFunc(...)
 	APPLY_SKILL_MULTIPLIER = true

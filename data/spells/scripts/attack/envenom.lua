@@ -19,7 +19,7 @@ condition:setParameter(CONDITION_PARAM_STARTVALUE, 5)
 condition:setParameter(CONDITION_PARAM_TICKINTERVAL, 6000)
 condition:setParameter(CONDITION_PARAM_FORCEUPDATE, true)
 
-combat:setCondition(condition)
+combat:addCondition(condition)
 
 function onCastSpell(creature, var)
 	-- check for stairHop delay

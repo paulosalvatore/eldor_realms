@@ -1,19 +1,6 @@
 function destroyItem(player, target, toPosition)
-	if target == nil or not target:isItem() then
+	if type(target) ~= "userdata" or not target:isItem() then
 		return false
-	end
-
-	if target.actionid == 2902 and target.itemid == 3422 then
-		target:transform(3421)
-		toPosition:sendMagicEffect(CONST_ME_POFF)
-		addEvent(function(posicao)
-			local tile = Tile(posicao)
-			local item = tile:getItems()[1]
-			if item:getActionId() == 2902 then
-				item:transform(3422)
-			end
-		end, 60000, toPosition)
-		return true
 	end
 
 	if target:hasAttribute(ITEM_ATTRIBUTE_UNIQUEID) or target:hasAttribute(ITEM_ATTRIBUTE_ACTIONID) then
@@ -21,7 +8,7 @@ function destroyItem(player, target, toPosition)
 	end
 
 	if toPosition.x == CONTAINER_POSITION then
-		player:sendCancelMessage(Game.getReturnMessage(RETURNVALUE_NOTPOSSIBLE))
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 		return true
 	end
 
@@ -30,9 +17,9 @@ function destroyItem(player, target, toPosition)
 		return false
 	end
 
-	if math.random(100) <= 15 then
+	if math.random(7) == 1 then
 		local item = Game.createItem(destroyId, 1, toPosition)
-		if item ~= nil then
+		if item then
 			item:decay()
 		end
 

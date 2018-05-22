@@ -1,23 +1,31 @@
-function Item:getType()
+function Item.getType(self)
 	return ItemType(self:getId())
 end
 
-function Item:isContainer()
+function Item.isContainer(self)
 	return false
 end
 
-function Item:isCreature()
+function Item.isCreature(self)
 	return false
 end
 
-function Item:isPlayer()
+function Item.isMonster(self)
 	return false
 end
 
-function Item:isTeleport()
+function Item.isNpc(self)
 	return false
 end
 
-function Item:isTile()
+function Item.isPlayer(self)
+	return false
+end
+
+function Item.isTeleport(self)
+	return false
+end
+
+function Item.isTile(self)
 	return false
 end

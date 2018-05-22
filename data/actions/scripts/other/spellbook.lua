@@ -1,9 +1,7 @@
 function onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	local count = getPlayerInstantSpellCount(player)
 	local text = ""
 	local spells = {}
-	for i = 0, count - 1 do
-		local spell = getPlayerInstantSpellInfo(player, i)
+	for _, spell in ipairs(player:getInstantSpells()) do
 		if spell.level ~= 0 then
 			if spell.manapercent > 0 then
 				spell.mana = spell.manapercent .. "%"
@@ -24,7 +22,7 @@ function onUse(player, item, fromPosition, target, toPosition, isHotkey)
 			line = line .. "Spells for Level " .. spell.level .. "\n"
 			prevLevel = spell.level
 		end
-		text = text .. line .. "  " .. spell.words .. " - " .. spell.name .. ": " .. spell.mana .. "\n"
+		text = text .. line .. "  " .. spell.words .. " - " .. spell.name .. " : " .. spell.mana .. "\n"
 	end
 
 	player:showTextDialog(item:getId(), text)

@@ -1,8 +1,3 @@
-local function atualizarOnline()
-	db.query("UPDATE `server_config` SET `value` = " .. db.escapeString(os.time()) .. " WHERE `config` = 'online'")
-	addEvent(atualizarOnline, 10*1000)
-end
-
 function onStartup()
 	math.randomseed(os.mtime())
 
@@ -28,7 +23,7 @@ function onStartup()
 	if resultId ~= false then
 		repeat
 			local house = House(result.getDataInt(resultId, "id"))
-			if house ~= nil then
+			if house then
 				local highestBidder = result.getDataInt(resultId, "highest_bidder")
 				local balance = result.getDataLong(resultId, "balance")
 				local lastBid = result.getDataInt(resultId, "last_bid")
@@ -42,15 +37,10 @@ function onStartup()
 		result.free(resultId)
 	end
 
-	atualizarOnline()
-	db.query("UPDATE `server_config` SET `value` = " .. db.escapeString(os.time()) .. " WHERE `config` = 'uptime'")
-
-	-- gerarPontosColetaMadeira()
-	-- verificarItensMoviveis()
-	-- iniciarJefrey()
-	-- efeitosTutorial()
-	if atualizarNpcsBanco then
-		atualizarNpcs()
+	-- store towns in database
+	db.query("TRUNCATE TABLE `towns`")
+	for i, town in ipairs(Game.getTowns()) do
+		local position = town:getTemplePosition()
+		db.query("INSERT INTO `towns` (`id`, `name`, `posx`, `posy`, `posz`) VALUES (" .. town:getId() .. ", " .. db.escapeString(town:getName()) .. ", " .. position.x .. ", " .. position.y .. ", " .. position.z .. ")")
 	end
-
 end

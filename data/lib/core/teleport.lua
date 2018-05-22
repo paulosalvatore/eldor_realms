@@ -1,3 +1,3 @@
-function Teleport:isTeleport()
+function Teleport.isTeleport(self)
 	return true
 end

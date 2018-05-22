@@ -16,6 +16,11 @@ local function getSkillId(skillName)
 	end
 end
 
+local function getExpForLevel(level)
+	level = level - 1
+	return ((50 * level * level * level) - (150 * level * level) + (400 * level)) / 3
+end
+
 function onSay(player, words, param)
 	if not player:getGroup():getAccess() then
 		return true
@@ -26,13 +31,13 @@ function onSay(player, words, param)
 	end
 
 	local split = param:split(",")
-	if split[2] == nil then
+	if not split[2] then
 		player:sendCancelMessage("Insufficient parameters.")
 		return false
 	end
 
 	local target = Player(split[1])
-	if target == nil then
+	if not target then
 		player:sendCancelMessage("A player with that name is not online.")
 		return false
 	end
@@ -41,14 +46,14 @@ function onSay(player, words, param)
 	split[2] = split[2]:gsub("^%s*(.-)$", "%1")
 
 	local count = 1
-	if split[3] ~= nil then
+	if split[3] then
 		count = tonumber(split[3])
 	end
 
 	local ch = split[2]:sub(1, 1)
 	for i = 1, count do
 		if ch == "l" or ch == "e" then
-			target:addLevel()
+			target:addExperience(getExpForLevel(target:getLevel() + 1) - target:getExperience(), false)
 		elseif ch == "m" then
 			target:addManaSpent(target:getVocation():getRequiredManaSpent(target:getBaseMagicLevel() + 1) - target:getManaSpent())
 		else
